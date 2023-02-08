@@ -1,65 +1,46 @@
 <script setup lang="ts">
-</script>
-
-<script lang="ts">
+import { onMounted, ref, TextareaHTMLAttributes } from 'vue';
 import { postData } from './main';
-export default {
-  data() {
-    return {
-      text: '',
-      response: ''
-    };
-  },
-  mounted() {
-    const textarea = document.querySelector("#text_with_bobards_id");
-    textarea.addEventListener('keydown', (event) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
-        event.preventDefault();
-        document.querySelector("#submit_button").click();
-      }
-    })
-  },
-  methods: {
-    async postData() {
-      this.response = await postData(this.text)
-    }
+
+const text = ref('');
+const response = ref('');
+
+async function handleKeyDown(event: KeyboardEvent) {
+  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+    event.preventDefault();
+    await updateResponse();
   }
-}
+};
+
+async function updateResponse() {
+  response.value = await postData(text.value);
+};
 </script>
 
 <template>
-  <textarea
-    v-model="text"
-    class="input"
-    rows="9"
-    cols="80"
-    id="text_with_bobards_id"
-    name="text_with_bobards"
-    autofocus
-    placeholder="Entrez votre texte.">
+  <div class="wrapper">
+    <textarea v-model="text" class="input" @keydown="handleKeyDown" autofocus placeholder="Entrez votre texte.">
   </textarea>
-  <input
-    type="submit"
-    value="Débobardiser (⌘+↵)"
-    id="submit_button"
-    class="button-4"
-    role="button"
-    @click="postData">
+    <div class="button-wrapper">
+      <input type="submit" value="Débobardiser (⌘+↵)" class="button-4" role="button" @click="updateResponse">
+    </div>
     <p v-if="response" class="preview">{{ response }}</p>
+  </div>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
+<style scoped lang="scss">
+.wrapper {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+  width: 800px;
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
+  .input {
+    height: 200px;
+  }
 
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+  .preview {
+    margin: 0;
+  }
 }
 </style>

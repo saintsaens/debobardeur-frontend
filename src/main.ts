@@ -4,6 +4,7 @@ import App from './App.vue'
 
 import axios from 'axios';
 
+const url = "http://localhost:3000";
 
 createApp(App).mount('#app');
 
