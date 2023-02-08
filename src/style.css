@@ -51,10 +51,6 @@ a {
   white-space: pre-line;
 }
 
-.form {
-  max-width: 720px;
-}
-
 .button-4 {
   appearance: none;
   background-color: hsl(20deg, 10%, 20%);
