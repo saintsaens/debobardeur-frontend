@@ -2,11 +2,27 @@
 </script>
 
 <script lang="ts">
+import { postData } from './main';
 export default {
   data() {
     return {
-      text: ''
+      text: '',
+      response: ''
     };
+  },
+  mounted() {
+    const textarea = document.querySelector("#text_with_bobards_id");
+    textarea.addEventListener('keydown', (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        event.preventDefault();
+        document.querySelector("#submit_button").click();
+      }
+    })
+  },
+  methods: {
+    async postData() {
+      this.response = await postData(this.text)
+    }
   }
 }
 </script>
@@ -22,13 +38,14 @@ export default {
     autofocus
     placeholder="Entrez votre texte.">
   </textarea>
-  <p>{{ text }}</p>
   <input
     type="submit"
     value="Débobardiser (⌘+↵)"
     id="submit_button"
     class="button-4"
-    role="button">
+    role="button"
+    @click="postData">
+    <p v-if="response" class="preview">{{ response }}</p>
 </template>
 
 <style scoped>
